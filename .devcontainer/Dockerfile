@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/universal:2
+FROM mcr.microsoft.com/vscode/devcontainers/python:3
 
 ENV PYTHONUNBUFFERED 1
 
