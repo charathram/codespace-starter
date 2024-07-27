@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+gunicorn
+alembic
+SQLAlchemy
+psycopg2-binary
+python-dotenv
+python-multipart
