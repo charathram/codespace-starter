@@ -1,6 +1,5 @@
 {
   "name": "Crowdbotics Default Codespace Config - No Copilot",
-  //"image": "mcr.microsoft.com/devcontainers/universal:2",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspace",
@@ -49,5 +48,6 @@
         ]
       }
     }
-  }
+  },
+  "postCreateCommand": "python3 -m pip install -r requirements-dev.txt"
 }
