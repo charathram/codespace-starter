@@ -46,3 +46,20 @@ Open the repository on Github as a Codespace.
 1. Install the VSCode Devcontainer extension.
 2. Open the repository in VSCode.
 
+## Running the Application
+
+### Using DevContainers
+
+This project is set up to be used with Visual Studio Code DevContainers. To start the application:
+
+1. Open the project in Visual Studio Code.
+2. Reopen the project in a DevContainer.
+3. The application will automatically build and start.
+
+### Using Docker Compose
+
+Alternatively, you can run the application using Docker Compose:
+
+```sh
+docker-compose up --build
+```
