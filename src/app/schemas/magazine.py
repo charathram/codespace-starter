@@ -1,14 +1,10 @@
-from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class MagazineBase(BaseModel):
     name: str
     description: str
-    base_price: float
-    discount_quarterly: Optional[float] = None
-    discount_half_yearly: Optional[float] = None
-    discount_annual: Optional[float] = None
+    base_price: float = Field(..., gt=0)
 
 
 class MagazineCreate(MagazineBase):

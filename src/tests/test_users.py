@@ -12,7 +12,7 @@ def test_register_user(client, unique_username, unique_email):
     assert response.status_code == 200, f"Response status code: {response.status_code}, Response body: {response.text}"
 
 def test_login_user(client, unique_username, unique_email):
-    username, _ = create_user(client, unique_username, unique_email, "loginpassword")
+    username = create_user(client, unique_username, unique_email, "loginpassword")["username"]
     response = client.post("/users/login", json={
         "username": username,
         "password": "loginpassword"
@@ -21,7 +21,7 @@ def test_login_user(client, unique_username, unique_email):
 
 
 def test_reset_password(client, unique_username, unique_email):
-    username, email = create_user(client, unique_username, unique_email, "testpassword")
+    username, email, _ = create_user(client, unique_username, unique_email, "testpassword").values()
     token = login_user(client, username, "testpassword")
     headers = {"Authorization": f"Bearer {token}"}
 
@@ -30,7 +30,7 @@ def test_reset_password(client, unique_username, unique_email):
 
 
 def test_user_deactivation(client, unique_username, unique_email):
-    username, _ = create_user(client, unique_username, unique_email, "deactivatepassword")
+    username = create_user(client, unique_username, unique_email, "deactivatepassword")["username"]
     token = login_user(client, username, "deactivatepassword")
     headers = {"Authorization": f"Bearer {token}"}
 
@@ -43,7 +43,7 @@ def test_user_deactivation(client, unique_username, unique_email):
 
 
 def test_token_refresh(client, unique_username, unique_email):
-    username, _ = create_user(client, unique_username, unique_email, "refreshpassword")
+    username = create_user(client, unique_username, unique_email, "refreshpassword")["username"]
     login_response = client.post("/users/login", json={
         "username": username,
         "password": "refreshpassword"
@@ -59,7 +59,7 @@ def test_token_refresh(client, unique_username, unique_email):
 
 
 def test_token_expiry(client, unique_username, unique_email):
-    username, _ = create_user(client, unique_username, unique_email, "expirypassword")
+    username = create_user(client, unique_username, unique_email, "expirypassword")["username"]
     token = create_access_token({"sub": username}, expires_delta=timedelta(seconds=2))
     headers = {"Authorization": f"Bearer {token}"}
 

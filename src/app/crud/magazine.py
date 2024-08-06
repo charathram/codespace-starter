@@ -7,31 +7,33 @@ def get_magazine(db: Session, magazine_id: int) -> Magazine:
     return db.query(Magazine).filter(Magazine.id == magazine_id).first()
 
 
-def get_magazines(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Magazine).offset(skip).limit(limit).all()
+def get_magazines(db: Session) -> list[Magazine]:
+    return db.query(Magazine).all()
 
 
-def create_magazine(db: Session, magazine: MagazineCreate):
-    db_magazine = Magazine(**magazine.model_dump())
-    db.add(db_magazine)
+def create_magazine(db: Session, magazine_in: MagazineCreate) -> Magazine:
+    db_obj = Magazine(**magazine_in.model_dump())
+    db.add(db_obj)
     db.commit()
-    db.refresh(db_magazine)
-    return db_magazine
+    db.refresh(db_obj)
+    return db_obj
 
 
-def update_magazine(db: Session, magazine_id: int, magazine: MagazineUpdate):
-    db_magazine = db.query(Magazine).filter(Magazine.id == magazine_id).first()
-    if db_magazine:
-        for key, value in magazine.model_dump(exclude_unset=True).items():
-            setattr(db_magazine, key, value)
+def update_magazine(
+    db: Session, magazine_id: int, magazine_in: MagazineUpdate
+) -> Magazine:
+    db_obj = get_magazine(db, magazine_id)
+    if db_obj:
+        for key, value in magazine_in.dict(exclude_unset=True).items():
+            setattr(db_obj, key, value)
         db.commit()
-        db.refresh(db_magazine)
-    return db_magazine
+        db.refresh(db_obj)
+    return db_obj
 
 
-def delete_magazine(db: Session, magazine_id: int):
-    db_magazine = db.query(Magazine).filter(Magazine.id == magazine_id).first()
-    if db_magazine:
-        db.delete(db_magazine)
+def delete_magazine(db: Session, magazine_id: int) -> Magazine:
+    db_obj = get_magazine(db, magazine_id)
+    if db_obj:
+        db.delete(db_obj)
         db.commit()
-    return db_magazine
+    return db_obj
