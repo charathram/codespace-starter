@@ -17,13 +17,20 @@ def get_subscriptions(db: Session, user_id: int) -> list[Subscription]:
     )
 
 
-def create_subscription(
-    db: Session, subscription: SubscriptionCreate
-) -> Subscription:
-    magazine = (
-        db.query(Magazine).filter(Magazine.id == subscription.magazine_id).first()
-    )
-    plan = db.query(Plan).filter(Plan.id == subscription.plan_id).first()
+def create_subscription(db: Session, subscription_in: SubscriptionCreate) -> Subscription:
+    # Check for existing subscription
+    existing_subscription = db.query(Subscription).filter(
+        Subscription.user_id == subscription_in.user_id,
+        Subscription.magazine_id == subscription_in.magazine_id,
+        Subscription.plan_id == subscription_in.plan_id,
+        Subscription.is_active == True
+    ).first()
+    
+    if existing_subscription:
+        raise ValueError("Subscription already exists for this user, magazine, and plan")
+    
+    magazine = db.query(Magazine).filter(Magazine.id == subscription_in.magazine_id).first()
+    plan = db.query(Plan).filter(Plan.id == subscription_in.plan_id).first()
 
     if not magazine or not plan:
         raise ValueError("Invalid magazine or plan ID")
@@ -33,12 +40,12 @@ def create_subscription(
         raise ValueError("Price must be greater than zero")
 
     subscription = Subscription(
-        user_id=subscription.user_id,
-        magazine_id=subscription.magazine_id,
-        plan_id=subscription.plan_id,
+        user_id=subscription_in.user_id,
+        magazine_id=subscription_in.magazine_id,
+        plan_id=subscription_in.plan_id,
         price=price,
-        renewal_date=subscription.renewal_date,
-        is_active=True,
+        renewal_date=subscription_in.renewal_date,
+        is_active=True
     )
 
     db.add(subscription)

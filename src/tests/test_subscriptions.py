@@ -304,3 +304,36 @@ def test_price_calculation(client, unique_username, unique_email):
         response.status_code == 200
     ), f"Response status code: {response.status_code}, Response body: {response.text}"
     assert response.json()["price"] == 100 * (1 - diamond_plan["discount"])
+
+
+def test_unique_subscription_constraint(client, unique_username, unique_email):
+    # Create a user and login
+    username, _, user_id = create_user(client, unique_username, unique_email, "adminpassword").values()
+    token = login_user(client, username, "adminpassword")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Create a plan and magazine
+    name_suffix = "unique_sub"
+    plan = create_plan(client, headers, title=generate_random_plan_name())
+    magazine = create_magazine(client, headers, name_suffix)
+
+    # Create the first subscription
+    response = client.post("/subscriptions/", json={
+        "user_id": user_id,  # Assuming the created user ID is 1
+        "magazine_id": magazine["id"],
+        "plan_id": plan["id"],
+        "renewal_date": "2024-12-31"
+    }, headers=headers)
+    assert response.status_code == 200, f"Response status code: {response.status_code}, Response body: {response.text}"
+    
+    # Attempt to create a duplicate subscription
+    response = client.post("/subscriptions/", json={
+        "user_id": user_id,  # Assuming the created user ID is 1
+        "magazine_id": magazine["id"],
+        "plan_id": plan["id"],
+        "renewal_date": "2024-12-31"
+    }, headers=headers)
+    
+    # Assert that the second subscription creation attempt fails
+    assert response.status_code == 422, f"Response status code: {response.status_code}, Response body: {response.text}"
+    assert "already exists" in response.text, "Expected error message for duplicate subscription not found"

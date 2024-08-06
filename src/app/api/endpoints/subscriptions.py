@@ -27,8 +27,8 @@ def create_subscription(
     current_user: User = Depends(deps.get_current_user),
 ) -> models.Subscription:
     try:
-        return crud_subscription.create_subscription(db=db, subscription=subscription_in)
-    except ValueError as e:
+        return crud_subscription.create_subscription(db=db, subscription_in=subscription_in)
+    except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))
 
 
