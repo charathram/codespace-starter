@@ -179,3 +179,10 @@ fastapi/
 
 # Windows
 Thumbs.db
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+*.tfvars
