@@ -37,7 +37,7 @@ resource "azurerm_app_service" "main" {
   }
 
   site_config {
-    linux_fx_version = "DOCKER|${azurerm_container_registry.main.login_server}/${var.container_image_name}:latest"
+    linux_fx_version = "DOCKER|azuredocs/containerapps-helloworld:latest"
   }
 
   identity {
@@ -68,17 +68,17 @@ resource "azurerm_key_vault_secret" "db_password" {
 }
 
 resource "azurerm_postgresql_server" "main" {
-  name                          = var.postgresql_server_name
-  location                      = azurerm_resource_group.main.location
-  resource_group_name           = azurerm_resource_group.main.name
-  administrator_login           = data.azurerm_key_vault_secret.db_username.value
-  administrator_login_password  = data.azurerm_key_vault_secret.db_password.value
-  version                       = "11"
-  sku_name                      = "B_Gen5_1"
-  storage_mb                    = 5120
-  backup_retention_days         = 7
+  name                = var.postgresql_server_name
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  administrator_login = data.azurerm_key_vault_secret.db_username.value
+  administrator_login_password = data.azurerm_key_vault_secret.db_password.value
+  version             = "11"
+  sku_name            = "B_Gen5_1"
+  storage_mb          = 5120
+  backup_retention_days = 7
   public_network_access_enabled = true
-  ssl_enforcement_enabled       = true
+  ssl_enforcement_enabled = true
 }
 
 resource "azurerm_postgresql_database" "main" {
