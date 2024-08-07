@@ -1,13 +1,14 @@
+
 variable "prefix" {
   description = "A prefix for all resources to ensure uniqueness"
   type        = string
-  default     = "crowdbotics_research"
+  default     = "crowdbotics-research"
 }
 
 variable "resource_group_name" {
   description = "The name of the resource group"
   type        = string
-  default     = "${var.prefix}_rg"
+  default     = "crowdbotics-research-rg"
 }
 
 variable "location" {
@@ -19,19 +20,19 @@ variable "location" {
 variable "acr_name" {
   description = "The name of the Azure Container Registry"
   type        = string
-  default     = "${var.prefix}_registry"
+  default     = "crowdbotics-research-registry"
 }
 
 variable "app_service_plan_name" {
   description = "The name of the App Service plan"
   type        = string
-  default     = "${var.prefix}-app-service-plan"
+  default     = "crowdbotics-research-app-service-plan"
 }
 
 variable "app_service_name" {
   description = "The name of the App Service"
   type        = string
-  default     = "${var.prefix}-app-service"
+  default     = "crowdbotics-research-app-service"
 }
 
 variable "database_url" {
@@ -43,13 +44,13 @@ variable "database_url" {
 variable "container_image_name" {
   description = "The name of the container image"
   type        = string
-  default     = "${var.prefix}-app"
+  default     = "crowdbotics-research-app"
 }
 
 variable "postgresql_server_name" {
   description = "The name of the PostgreSQL server"
   type        = string
-  default     = "${var.prefix}-postgres-server"
+  default     = "crowdbotics-research-postgres-server"
 }
 
 variable "postgresql_admin_username" {
@@ -72,7 +73,7 @@ variable "postgresql_database_name" {
 variable "key_vault_name" {
   description = "The name of the Key Vault"
   type        = string
-  default     = "${var.prefix}-keyvault"
+  default     = "crowdbotics-research-keyvault"
 }
 data "azurerm_key_vault_secret" "db_username" {
   name         = "db-username"
