@@ -123,13 +123,3 @@ resource "azurerm_key_vault_secret" "acr_admin_password" {
   value        = azurerm_container_registry.main.admin_password
   key_vault_id = azurerm_key_vault.main.id
 }
-
-data "azurerm_key_vault_secret" "acr_admin_username" {
-  name         = "acr-admin-username"
-  key_vault_id = azurerm_key_vault.main.id
-}
-
-data "azurerm_key_vault_secret" "acr_admin_password" {
-  name         = "acr-admin-password"
-  key_vault_id = azurerm_key_vault.main.id
-}
