@@ -18,3 +18,5 @@ data "azurerm_key_vault_secret" "db_password" {
   name         = "db-password"
   key_vault_id = azurerm_key_vault.main.id
 }
+
+data "azurerm_client_config" "current" {}

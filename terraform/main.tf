@@ -15,21 +15,11 @@ resource "azurerm_container_registry" "main" {
   admin_enabled       = true
 }
 
-resource "azurerm_app_service_plan" "main" {
-  name                = var.app_service_plan_name
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  sku {
-    tier = "Standard"
-    size = "S1"
-  }
-}
-
-resource "azurerm_app_service" "main" {
+resource "azurerm_linux_web_app" "main" {
   name                = var.app_service_name
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  app_service_plan_id = azurerm_app_service_plan.main.id
+  service_plan_id     = azurerm_service_plan.main.id
 
   app_settings = {
     WEBSITES_PORT = "8000"
@@ -37,7 +27,7 @@ resource "azurerm_app_service" "main" {
   }
 
   site_config {
-    linux_fx_version = "DOCKER|azuredocs/containerapps-helloworld:latest"
+    always_on = true
   }
 
   identity {
@@ -45,6 +35,14 @@ resource "azurerm_app_service" "main" {
   }
 
   depends_on = [azurerm_container_registry.main]
+}
+
+resource "azurerm_service_plan" "main" {
+  name                = var.app_service_plan_name
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  sku_name            = "S1"
+  os_type             = "Linux"
 }
 
 resource "azurerm_key_vault_secret" "db_username" {
@@ -94,14 +92,7 @@ resource "azurerm_key_vault_access_policy" "main" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
-  secret_permissions = [
-    "set",
-    "get",
-    "delete",
-    "list",
-    "backup",
-    "restore",
-  ]
+  secret_permissions = ["Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"]
 }
 
 resource "azurerm_key_vault_secret" "acr_admin_username" {

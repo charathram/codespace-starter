@@ -1,6 +1,6 @@
 output "app_service_default_hostname" {
   description = "The default hostname of the App Service"
-  value       = azurerm_app_service.main.default_site_hostname
+  value       = azurerm_linux_web_app.main.default_hostname
 }
 
 output "container_registry_login_server" {
