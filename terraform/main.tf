@@ -47,14 +47,6 @@ resource "azurerm_app_service" "main" {
   depends_on = [azurerm_container_registry.main]
 }
 
-resource "azurerm_key_vault" "main" {
-  name                = "${var.prefix}-keyvault"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  sku_name            = "standard"
-  tenant_id           = data.azurerm_client_config.current.tenant_id
-}
-
 resource "azurerm_key_vault_secret" "db_username" {
   name         = "db-username"
   value        = var.postgresql_admin_username
