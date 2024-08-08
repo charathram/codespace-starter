@@ -1,4 +1,3 @@
-
 variable "prefix" {
   description = "A prefix for all resources to ensure uniqueness"
   type        = string
@@ -62,4 +61,10 @@ variable "key_vault_name" {
   description = "The name of the Key Vault"
   type        = string
   default     = "crowdbotics-research-keyvault"
+}
+
+variable "acr_login_server" {
+  description = "The login server of the Azure Container Registry"
+  type        = string
+  default     = ""
 }
