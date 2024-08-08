@@ -37,7 +37,7 @@ variable "app_service_name" {
 variable "container_image_name" {
   description = "The name of the container image"
   type        = string
-  default     = "crowdbotics-research-app"
+  default     = "crowdbotics_research-app"
 }
 
 variable "postgresql_server_name" {

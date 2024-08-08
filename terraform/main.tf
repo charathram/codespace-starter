@@ -34,7 +34,7 @@ resource "azurerm_linux_web_app" "main" {
   site_config {
     always_on = true
     application_stack {
-      docker_image_name = "${azurerm_container_registry.main.login_server}/${var.container_image_name}"
+      docker_image_name = "${var.container_image_name}"
       docker_registry_password = data.azurerm_key_vault_secret.acr_admin_password.value
       docker_registry_username = data.azurerm_key_vault_secret.acr_admin_username.value
       docker_registry_url = "https://${azurerm_container_registry.main.login_server}"
@@ -121,7 +121,7 @@ resource "azurerm_key_vault_secret" "acr_admin_password" {
 resource "random_password" "password" {
   length           = 20
   special          = true
-  override_special = "_%40@"
+  override_special = "_%"
   upper            = true
   lower            = true
   numeric          = true
@@ -129,6 +129,6 @@ resource "random_password" "password" {
   keepers = {
     # This value is arbitrary and can be anything. Changing it will
     # trigger the password to be regenerated.
-    version = "1"
+    version = "2"
   }
 }
