@@ -35,12 +35,6 @@ variable "app_service_name" {
   default     = "crowdbotics-research-app-service"
 }
 
-variable "database_url" {
-  description = "The URL of the database"
-  type        = string
-  default     = "postgresql+psycopg2://app_user:app_password@db/crowdboticsresearchdb"
-}
-
 variable "container_image_name" {
   description = "The name of the container image"
   type        = string

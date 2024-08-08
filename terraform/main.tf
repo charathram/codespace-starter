@@ -2,6 +2,11 @@ provider "azurerm" {
   features {}
 }
 
+locals {
+  database_url = "postgresql+psycopg2://${data.azurerm_key_vault_secret.db_username.value}:${data.azurerm_key_vault_secret.db_password.value}@${azurerm_postgresql_server.main.fqdn}/${var.postgresql_database_name}?sslmode=require"
+}
+
+
 resource "azurerm_resource_group" "main" {
   name     = var.resource_group_name
   location = var.location
@@ -23,7 +28,7 @@ resource "azurerm_linux_web_app" "main" {
 
   app_settings = {
     WEBSITES_PORT = "8000"
-    DATABASE_URL  = var.database_url
+    DATABASE_URL  = local.database_url
   }
 
   site_config {
