@@ -113,9 +113,13 @@ resource "azurerm_key_vault_secret" "acr_admin_password" {
 }
 
 resource "random_password" "password" {
-  length           = 16
+  length           = 20
   special          = true
   override_special = "_%@"
+  upper            = true
+  lower            = true
+  numeric          = true
+
   keepers = {
     # This value is arbitrary and can be anything. Changing it will
     # trigger the password to be regenerated.
