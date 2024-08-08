@@ -58,7 +58,7 @@ resource "azurerm_key_vault_secret" "db_username" {
 
 resource "azurerm_key_vault_secret" "db_password" {
   name         = "db-password"
-  value        = var.postgresql_admin_password
+  value        = random_password.password.result
   key_vault_id = azurerm_key_vault.main.id
 }
 
@@ -110,4 +110,15 @@ resource "azurerm_key_vault_secret" "acr_admin_password" {
   name         = "acr-admin-password"
   value        = azurerm_container_registry.main.admin_password
   key_vault_id = azurerm_key_vault.main.id
+}
+
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "_%@"
+  keepers = {
+    # This value is arbitrary and can be anything. Changing it will
+    # trigger the password to be regenerated.
+    version = "1"
+  }
 }
