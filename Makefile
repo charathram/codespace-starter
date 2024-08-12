@@ -4,7 +4,9 @@ PYTHON := $(VENV_DIR)/bin/python
 PIP := $(VENV_DIR)/bin/pip
 TEST_DIR := src/tests
 REQUIREMENTS := requirements-dev.txt
-
+TAG := latest
+REGISTRY := crowdboticsresearchregistry.azurecr.io
+IMAGE_NAME := crowdbotics_research-app
 # Default target
 all: test
 
@@ -31,6 +33,14 @@ lint:
 # Format code
 format:
 	$(PYTHON) -m black .
+
+# make command to build a docker image
+docker-build:
+	docker buildx build --platform=linux/amd64 -t $(REGISTRY)/$(IMAGE_NAME):$(TAG) -f Dockerfile .
+
+# make command to push the docker image to docker hub crowdboticsresearchregistry.azurecr.io/crowdbotics_research-app
+docker-push:
+	docker push $(REGISTRY)/$(IMAGE_NAME):$(TAG)
 
 # Help
 help:
