@@ -3,7 +3,8 @@ provider "azurerm" {
 }
 
 locals {
-  database_url = "postgresql+psycopg2://${data.azurerm_key_vault_secret.db_username.value}:${data.azurerm_key_vault_secret.db_password.value}@${azurerm_postgresql_server.main.fqdn}/${var.postgresql_database_name}?sslmode=require"
+  database_url = "postgresql+psycopg2://${data.azurerm_key_vault_secret.db_username.value}@${var.postgresql_server_name}:${data.azurerm_key_vault_secret.db_password.value}@${azurerm_postgresql_server.main.fqdn}/${var.postgresql_database_name}?sslmode=require"
+  possible_ips = split(",", azurerm_linux_web_app.main.outbound_ip_addresses)
 }
 
 
@@ -61,6 +62,15 @@ resource "azurerm_key_vault_secret" "db_username" {
   name         = "db-username"
   value        = var.postgresql_admin_username
   key_vault_id = azurerm_key_vault.main.id
+}
+
+resource "azurerm_postgresql_firewall_rule" "main" {
+  count               = length(local.possible_ips)
+  name                = "AllowAllWindowsAzureIps"
+  resource_group_name = azurerm_resource_group.main.name
+  server_name         = azurerm_postgresql_server.main.name
+  start_ip_address    = local.possible_ips[count.index]
+  end_ip_address      = local.possible_ips[count.index]
 }
 
 resource "azurerm_key_vault_secret" "db_password" {
