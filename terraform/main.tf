@@ -33,6 +33,7 @@ resource "azurerm_linux_web_app" "main" {
 
   site_config {
     always_on = true
+    app_command_line = "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     application_stack {
       docker_image_name = "${var.container_image_name}"
       docker_registry_password = data.azurerm_key_vault_secret.acr_admin_password.value
